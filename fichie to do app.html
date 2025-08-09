@@ -6,12 +6,42 @@
 <main charset="UTF-8">
 <style>
 body{background:#18181a;
-  color:#fff;
-  font-family:arial,sans-serif;
+     color:#fff;
     }
-h1 { text-align:center;
-    margin-top:60px;
-   }
+#login{ text-align: center;
+     margin-top: 60px;
+}
+#welcome{ display: none;
+      text-align:center;
+      margin-top:60px;
+      background-image:url('https:/);
+      background-position:center;
+      background-size:cover;
+      padding:50px 
+      color:#fff;
+	  height:100vh;
+}
+#tasks { display:none;
+     margin-top:40px;
+}
+#task-list{
+    float:right;
+    width:300px;
+	background-color:red;
+	padding:20px;
+	border:10px solid #ddd;
+	text-align:center;
+	clear:both;
+	margin:auto;
+	color:#333;
+	min-height:200px
+	
+	}
+#task-form{
+    float:left;
+	width:60;
+	padding:20px;
+}
 button,button,input[type="text"]{
        width:150;
        height:30;
@@ -22,57 +52,137 @@ button,button,input[type="text"]{
 	   border:none;
 	   font-size:1rem;
 	  }
-#tasks{display:none;
-text-align:center;
-margin-top:40px
-      }
-css.done{color:#39ff14;
-        text-decoration:line-through;
-		font-weight:bold;
-		}
-ul{list-style:none;
-   padding:0;
-   max-width:350px;
-   margin:16px;
-   }
-li{background:#24242c;
-   margin:10px;
-   border-radius:5px;
-   padding:13px;
-   font-size:1.1px;
-   display:flex;
-   justify-content:space-between;
-   align-items:center;
-   }
-.num{background:#40c057;
-     color:#fff;
-	 padding:4px 10px;
-	 margin-right:12px;
-	 font-weight:bold;
-	 }	  
+table{
+    width:80;
+	border-collapse:collapse;
+	margin :0 auto;
+}
+th,td{
+    border:1px solid;
+	padding:10px;
+	text-align:right;
+	}
 </style>
 </head>
 <body>
+<div id="login">
+<h1> log in this application web </h1>
+<input id="firstName" type="text" placeholder="prenom">
+<input id="lastName" type="text" placeholder="name">
+<button onclick="showWelcome()">log in </button>
+</div>
+<div id="welcome" >
     <h1 align="center" style="color:blue" >  WELCOME  To-Do App  <h1>
-    <button onclick="tasck.html" style="color:green" 	align="center"
- >  <b>go to task list</b></button>
-	<div id="tasks" >
-	<h2 style="#87ceeb"> list tasks</h2>
-	<form id="addtaskform" >
-	<input type="text" id="taskinput" placeholder="add a new task" />
-	<button type="submit" style="color:green" align="right"> <b> add  task </b> </button>
-	</form>
-	<h3 style="blue"> all tasks </h3>
-	<ul id="alltasks"> </ul>
-	<h3> task  finish </h3>
-	<ul id="donelist"></ul>
-	<h4> task no finish </h4>
-	<ul id="tasklist"> </ul>
-
+	<h2 id="userName" > Hello <span id="fullName"></span></h2>
+    <button onclick="showTasks()" style="color:green" 	align="center">
+   <b> go to task list</b></button>
+   </div>
+	<div id="tasks" style="display:none" >
+	  <div id="task-form">
+	     <h2 > list tasks</h2>
+	     <input type="text" id="taskInput" placeholder="add a new task" />
+	     <input type="number" id="timeInput" placeholder="time to task" />
+	     <button onclick="addTask()"> <b> add  task </b> </button>
+		 </div>
+	  <div id="task-list">
+	      <h2 style="red">task list is</h2>
+	      <div id="taskslist"></div>
+	  </div>
 	</div>
+<script>
+ let tasks = [];
+ let firstName = "";
+ let lastName = "";
+function showWelcome(){
+  firstName = document.getElementById('firstName').value.trim();
+  lastName = document.getElementById('lastName').value.trim();
+  if (firstName !== "" && lastName !== ""){
+     document.getElementById('fullName').innerHTML = `${firstName} ${lastName}`;
+     document.getElementById('login').style.display = 'none';
+     document.getElementById('welcome').style.display = 'block';
+  } 
+  else{
+     alert("pleaz write firstName and lastName");
+}
+}	 
+function showTasks(){
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('tasks').style.display = 'block';
+	}
+function updateDate(){
+  document.getElementById('date').innerHTML = '${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}';
+}
+function addTask(){
+  let taskInput = document.getElementById('taskInput');
+  let taskText = taskInput.value.trim();
+  let timeInput = document.getElementById('timeInput');
+  let time = timeInput.value.trim();
+  if (taskText && time ){
+    tasks.push({text:taskText,time:time,status:'no finish'});
+	taskInput.value = "";
+	timeInput.value = "";
+	renderTask();
+}
+}
+function renderTask(){
+   let taskslist = document.getElementById('taskslist');
+   taskslist.innerHTML = "";
+   let table = document.createElement('table');
+   let thead = document.createElement('thead');
+   let tr = document.createElement('tr');
+   let th1 = document.createElement('th1');
+   th1.innerHTML = 'task';
+   let th2 = document.createElement('th');
+   th2.innerHTML = 'time';
+   let th3 = document.createElement('th');
+   th3.innerHTML ='type'
+   let th4 = document.createElement('th');
+   th4.innerHTML = 'supprimer'
+   tr.appendChild(th1);
+   tr.appendChild(th2);
+   tr.appendChild(th3);
+   tr.appendChild(th4);
+   thead.appendChild(tr);
+   table.appendChild(thead);
+   let tbody = document.createElement('tbody');
+   tasks.forEach((task) => {
+       let tr = document.createElement('tr');
+	   let td1 = document.createElement('td');
+	   td1.innerHTML = task.text ;
+	   let td2 = document. createElement('td');
+	   td2.innerHTML = task.time ;
+	   let td3 = document.createElement('td');
+	   let checkbox = document.createElement('input');
+	   checkbox.type = 'checkbox' ;
+	   checkbox.onclick = function(){
+	       if (this.checked){
+		      task.status = 'finish';
+			  this.parentNode.innerHTML = 'finish';
+			  }else{
+			     task.status = 'no finish' ;
+				 this.parentNode.innerHTML = 'no finish';
+				 }
+	   };
+	   td3.appendChild(checkbox);
+	   td3.appendChild(document.createTextNode('no finish'));
+	   let td4 = document.createElement('td');
+	   let deletebutton = document.createElement('button');
+	   deletebutton.innerHTML = 'supprimer';
+	   deletebutton.onclick = function () {
+	         tasks.splice('index',1);
+             renderTask();
+             };
+	   td4.appendChild(deletebutton);
+	   tr.appendChild(td1);
+	   tr.appendChild(td2);
+	   tr.appendChild(td3);
+	   tr.appendChild(td4);
+	   tbody.appendChild(tr);
+	  });
+	  table.appendChild(tbody);
+	  taskslist.appendChild(table);
+}	  
+</script>
 </body>
 </html>
-<script>
-let 
-
-</script>
+																																																												
